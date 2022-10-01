@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+        * {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <select id="typeNumDrop"onchange="onChangeSomething(this)">
+        <option value="2Types">Defender has 2 types</option>
+        <option value="1Type" >Defender has one type</option>
+    </select>
+    <select id="atkTypeChooser" onchange="onChangeThing(this)">
+        <option value="1" selected="selected">Random Attack Type</option>
+    </select>
+    <br><br><br>
+    <img id='atkImg' src='./pokeball.png' width="50" height="50">
+    <h1>VS</h1>
+    <img id='defImg1' src='./pokeball.png' width="50" height="50">
+    <img id='defImg2' src='./pokeball.png' width="50" height="50">
+    <br><br><br>
+    <div id="buttons" style="visibility:visible">
+        <button id="4x">4x</button>
+        <button id="2x">2x</button>
+        <button id="1x">1x</button>
+        <button id="0.5x">0.5x</button>
+        <button id="0.25x">0.25x</button>
+        <button id="0x">0x</button>
+    </div>
+    <div id='big' style="visibility: hidden">
+        <h1 id="answerText">answer</h1>
+        <h3 id='amounts'>amounts</h3>
+    </div>
+    <button id='new'>GIVE ME A NEW ONE!</button>
+    <br><br><br>
+    <div id="streak"></div>
+    <section></section>
+    <script>
+        let winStreak = 0
+        winStreak = Number(localStorage.getItem('streak'))
+        let atkTypeImage = document.getElementById('atkImg')
+        let defTypeImageOne = document.getElementById('defImg1')
+        let defTypeImageTwo = document.getElementById('defImg2')
+        let amount = document.getElementById('amounts')
+        const typeNumDrop = document.getElementById('typeNumDrop')
+        const atkTypeChooser = document.getElementById('atkTypeChooser')
+        const answerText = document.getElementById('answerText')
+        const big = document.getElementById('big')
+        const show = document.getElementById('show')
+        const buttons = document.getElementById('buttons')
+        const streak = document.getElementById('streak')
+        const section = document.querySelector('section')
+        const reload = document.getElementById('new')
+        const supersupereff = document.getElementById('4x')
+        const supereff = document.getElementById('2x')
+        const eff = document.getElementById('1x')
+        const noteff = document.getElementById('0.5x')
+        const supernoteff = document.getElementById('0.25x')
+        const noeff = document.getElementById('0x')
+        const typeIcons = {
+            'normal': 'https://archives.bulbagarden.net/media/upload/thumb/c/cb/Normal_icon_LA.png/64px-Normal_icon_LA.png',
+            'fighting': 'https://archives.bulbagarden.net/media/upload/thumb/6/68/Fighting_icon_LA.png/64px-Fighting_icon_LA.png',
+            'flying': 'https://archives.bulbagarden.net/media/upload/thumb/d/de/Flying_icon_LA.png/64px-Flying_icon_LA.png',
+            'poison': 'https://archives.bulbagarden.net/media/upload/thumb/b/b4/Poison_icon_LA.png/64px-Poison_icon_LA.png',
+            'ground': 'https://archives.bulbagarden.net/media/upload/thumb/4/45/Ground_icon_LA.png/64px-Ground_icon_LA.png',
+            'rock': 'https://archives.bulbagarden.net/media/upload/thumb/8/85/Rock_icon_LA.png/64px-Rock_icon_LA.png',
+            'bug': 'https://archives.bulbagarden.net/media/upload/thumb/2/26/Bug_icon_LA.png/64px-Bug_icon_LA.png',
+            'ghost': 'https://archives.bulbagarden.net/media/upload/thumb/b/b5/Ghost_icon_LA.png/64px-Ghost_icon_LA.png',
+            'steel': 'https://archives.bulbagarden.net/media/upload/thumb/f/f9/Steel_icon_LA.png/64px-Steel_icon_LA.png',
+            'fire': 'https://archives.bulbagarden.net/media/upload/thumb/4/48/Fire_icon_LA.png/64px-Fire_icon_LA.png',
+            'water': 'https://archives.bulbagarden.net/media/upload/thumb/5/5e/Water_icon_LA.png/64px-Water_icon_LA.png',
+            'grass': 'https://archives.bulbagarden.net/media/upload/thumb/1/1b/Grass_icon_LA.png/64px-Grass_icon_LA.png',
+            'electric': 'https://archives.bulbagarden.net/media/upload/thumb/7/75/Electric_icon_LA.png/64px-Electric_icon_LA.png',
+            'psychic': 'https://archives.bulbagarden.net/media/upload/thumb/4/45/Psychic_icon_LA.png/64px-Psychic_icon_LA.png',
+            'ice': 'https://archives.bulbagarden.net/media/upload/thumb/7/70/Ice_icon_LA.png/64px-Ice_icon_LA.png',
+            'dragon': 'https://archives.bulbagarden.net/media/upload/thumb/2/28/Dragon_icon_LA.png/64px-Dragon_icon_LA.png',
+            'dark': 'https://archives.bulbagarden.net/media/upload/thumb/7/7f/Dark_icon_LA.png/64px-Dark_icon_LA.png',
+            'fairy': 'https://archives.bulbagarden.net/media/upload/thumb/b/b1/Fairy_icon_LA.png/64px-Fairy_icon_LA.png'
+        }
+        const types = {
+            'normal': {
+                "immune": ["ghost"],
+                "weak": ["fighting"],
+                "resist": [],
+                "very": [],
+                "notvery": ["rock", "steel"],
+                "noeffect": ["ghost"]
+            },
+            'fire': {
+                "immune": [],
+                "weak": ['water', 'ground', 'rock'],
+                "resist": ['fire', 'grass', 'ice', 'bug', 'steel', 'fairy'],
+                "very": ['grass', 'ice', 'bug', 'steel'],
+                "notvery": ["rock", 'fire', 'water', 'dragon'],
+                "noeffect": []
+            },
+            'water': {
+                "immune": [],
+                "weak": ['electric', 'grass'],
+                "resist": ['fire', 'water', 'ice', 'steel'],
+                "very": ['fire', 'ground', 'rock'],
+                "notvery": ['water', 'grass', 'dragon'],
+                "noeffect": []
+            },
+            'electric': {
+                "immune": [],
+                "weak": ['ground'],
+                "resist": ['electric', 'flying', 'steel'],
+                "very": ['water', 'flying'],
+                "notvery": ['electric', 'grass', 'dragon'],
+                "noeffect": ['ground']
+            },
+            'grass': {
+                "immune": [],
+                "weak": ['fire', 'ice', 'poison', 'flying', 'bug'],
+                "resist": ['water', 'electric', 'grass', 'ground'],
+                "very": ['water', 'ground', 'rock'],
+                "notvery": ['fire', 'grass', 'poison', 'flying', 'bug', 'dragon', 'steel'],
+                "noeffect": []
+            },
+            'ice': {
+                "immune": [],
+                "weak": ['fire', 'fighting', 'rock', 'steel'],
+                "resist": ['ice'],
+                "very": ['grass', 'ground', 'flying', 'dragon'],
+                "notvery": ['fire', 'water', 'ice', 'steel'],
+                "noeffect": []
+            },
+            'fighting': {
+                "immune": [],
+                "weak": ['flying', 'psychic', 'fairy'],
+                "resist": ['bug', 'dark', 'rock'],
+                "very": ['normal', 'ice', 'rock', 'dark', 'steel'],
+                "notvery": ['poison', 'flying', 'psychic', 'bug', 'fairy'],
+                "noeffect": ['ghost']
+            },
+            'poison': {
+                "immune": [],
+                "weak": ['ground', 'psychic'],
+                "resist": ['grass', 'fighting', 'poison', 'bug', 'fairy'],
+                "very": ['grass', 'fairy'],
+                "notvery": ['poison', 'ground', 'rock', 'ghost'],
+                "noeffect": ['steel']
+            },
+            'ground': {
+                "immune": ['electric'],
+                "weak": ['water', 'grass', 'ice'],
+                "resist": ['poison', 'rock'],
+                "very": ['fire', 'electric', 'rock', 'poison', 'steel'],
+                "notvery": ['bug', 'grass'],
+                "noeffect": ['flying']
+            },
+            'flying': {
+                "immune": ['ground'],
+                "weak": ['electric', 'ice', 'rock'],
+                "resist": ['grass', 'fighting', 'bug'],
+                "very": ['grass', 'fighting', 'bug'],
+                "notvery": ['electric', 'rock', 'steel'],
+                "noeffect": []
+            },
+            'psychic': {
+                "immune": [],
+                "weak": ['bug', 'ghost', 'dark'],
+                "resist": ['fighting', 'psychic'],
+                "very": ['fighting', 'poison'],
+                "notvery": ['psychic', 'steel'],
+                "noeffect": ['dark']
+            },
+            'bug': {
+                "immune": [],
+                "weak": ['fire', 'flying', 'rock'],
+                "resist": ['grass', 'fighting', 'ground'],
+                "very": ['grass', 'psychic', 'dark'],
+                "notvery": ['fire', 'fighting', 'poison', 'flying', 'ghost', 'steel', 'fairy'],
+                "noeffect": []
+            },
+            'rock': {
+                "immune": [],
+                "weak": ['water', 'grass', 'fighting', 'ground', 'steel'],
+                "resist": ['normal', 'fire', 'poison', 'flying'],
+                "very": ['fire', 'ice', 'flying', 'bug'],
+                "notvery": ['fighting', 'ground', 'steel'],
+                "noeffect": []
+            },
+            'ghost': {
+                "immune": ['normal', 'fighting'],
+                "weak": ['ghost', 'dark'],
+                "resist": ['poison', 'bug'],
+                "very": ['psychic', 'ghost'],
+                "notvery": ['dark'],
+                "noeffect": ['normal']
+            },
+            'dragon': {
+                "immune": [],
+                "weak": ['ice', 'dragon', 'fairy'],
+                "resist": ['fire', 'water', 'electric', 'grass'],
+                "very": ['dragon'],
+                "notvery": ['steel'],
+                "noeffect": ['fairy']
+            },
+            'dark': {
+                "immune": ['psychic'],
+                "weak": ['fighting', 'bug', 'fairy'],
+                "resist": ['ghost', 'dark'],
+                "very": ['psychic', 'ghost'],
+                "notvery": ['fighting', 'dark', 'fairy'],
+                "noeffect": []
+            },
+            'steel': {
+                "immune": ['poison'],
+                "weak": ['fire', 'fighting', 'ground'],
+                "resist": ['normal', 'grass', 'ice', 'flying', 'psychic', 'bug', 'rock', 'dragon', 'steel', 'fairy'],
+                "very": ['ice', 'rock', 'fairy'],
+                "notvery": ['fire', 'water', 'electric', 'steel'],
+                "noeffect": []
+            },
+            'fairy': {
+                "immune": ['dragon'],
+                "weak": ['poison', 'steel'],
+                "resist": ['fighting', 'bug', 'dark'],
+                "very": ['fighting', 'dragon', 'dark'],
+                "notvery": ['fire', 'poison', 'steel'],
+                "noeffect": []
+            }
+        }
+        let typeNames = Object.keys(types)
+        for (let i = 0; i < typeNames.length; i++) {
+            let e = document.createElement('option')
+            e.text = e.value = typeNames[i]
+            atkTypeChooser.appendChild(e)
+        }
+        atkTypeChooser.value = localStorage.getItem('monoType')
+        function onChangeThing(idk){
+            localStorage.setItem('monoType', atkTypeChooser.value)
+            console.log(localStorage.getItem('monoType'))
+            console.log(atkTypeChooser.value)
+        }
+        typeNumDrop.value = localStorage.getItem('numberOfTypes')
+        console.log(localStorage.getItem('numberOfTypes'))
+        function onChangeSomething(idk){
+            localStorage.setItem('numberOfTypes', typeNumDrop.value)
+            console.log(localStorage.getItem('numberOfTypes'))
+            console.log(typeNumDrop.value)
+        }
+        streak.innerHTML = 'Streak: ' + winStreak
+        let multiOne = 0
+        let multiTwo = 0
+        let attackingName = ''
+        if (atkTypeChooser.value == 'Random Attack Type') {
+            attackingName = typeNames[Math.floor(Math.random() * 18)]
+        } else {
+            attackingName = atkTypeChooser.value
+        }
+        const typeAttacking = (atkTypeName, defTypeName) => {
+            const atkType = types[atkTypeName]
+            if (atkType.very.some(typeName => typeName === defTypeName)) {
+                return "SUPER EFFECTIVE"
+            } else if (atkType.notvery.some(typeName => typeName === defTypeName)) {
+                return "NOT VERY EFFECTIVE"
+            } else if (atkType.noeffect.some(typeName => typeName === defTypeName)) {
+                return "NO EFFECT"
+            } else {
+                return "EFFECTIVE"
+            }
+        }
+        const twoTypes = (atkType, defTypeOne, defTypeTwo) => {
+            switch (typeAttacking(atkType, defTypeOne)) {
+                case 'SUPER EFFECTIVE':
+                    multiOne = 2
+                    break
+                case 'NOT VERY EFFECTIVE':
+                    multiOne = 0.5
+                    break
+                case 'NO EFFECT':
+                    multiOne = 0
+                    break
+                default:
+                    multiOne = 1
+            }
+            switch (typeAttacking(atkType, defTypeTwo)) {
+                case 'SUPER EFFECTIVE':
+                    multiTwo = 2
+                    break
+                case 'NOT VERY EFFECTIVE':
+                    multiTwo = 0.5
+                    break
+                case 'NO EFFECT':
+                    multiTwo = 0
+                    break
+                default:
+                    multiTwo = 1
+            }
+            if (typeNumDrop.value = 'Two Types') {
+                switch (multiOne * multiTwo) {
+                    case 4:
+                        return 'SUPER SUPER EFFECTIVE'
+                        break
+
+                    case 2:
+                        return 'SUPER EFFECTIVE'
+                        break
+
+                    case 1:
+                        return 'EFFECTIVE'
+                        break
+
+                    case 0.5:
+                        return 'NOT VERY EFFECTIVE'
+                        break
+
+                    case 0.25:
+                        return 'SUPER NOT VERY EFFECTIVE'
+                        break
+
+                    case 0:
+                        return 'NO EFFECT'
+                }
+            } else {
+                switch (multiOne) {
+                    case 2:
+                        return 'SUPER EFFECTIVE'
+                        break
+
+                    case 1:
+                        return 'SUPER EFFECTIVE'
+                        break
+
+                    case 0.5:
+                        return 'NOT VERY EFFECTIVE'
+                        break
+
+                    case 0:
+                        return 'NO EFFECT'
+                }
+            }
+        }
+
+        let defendingName = typeNames[Math.floor(Math.random() * 18)]
+        let defendingNameTwo = typeNames.filter(type => type !== defendingName)[Math.floor(Math.random() * 17)]
+        let rawAnswer = twoTypes(attackingName, defendingName, defendingNameTwo)
+        atkTypeImage.src = typeIcons[attackingName]
+        defTypeImageOne.src = typeIcons[defendingName]
+        defTypeImageTwo.src = typeIcons[defendingNameTwo]
+        let chosenAnswer = ''
+        supersupereff.addEventListener('click', function () {
+            chosenAnswer = 'SUPER SUPER EFFECTIVE'
+            revealAnswer()
+            event.preventDefault()
+        })
+        supereff.addEventListener('click', function () {
+            chosenAnswer = 'SUPER EFFECTIVE'
+            revealAnswer()
+            event.preventDefault()
+        })
+        eff.addEventListener('click', function () {
+            chosenAnswer = 'EFFECTIVE'
+            revealAnswer()
+            event.preventDefault()
+        })
+        noteff.addEventListener('click', function () {
+            chosenAnswer = 'NOT VERY EFFECTIVE'
+            revealAnswer()
+            event.preventDefault()
+        })
+        supernoteff.addEventListener('click', function () {
+            chosenAnswer = 'SUPER NOT VERY EFFECTIVE'
+            revealAnswer()
+            event.preventDefault()
+        })
+        noeff.addEventListener('click', function () {
+            chosenAnswer = 'NO EFFECT'
+            revealAnswer()
+            event.preventDefault()
+        })
+        big.style.visibility = 'hidden'
+        function revealAnswer() {
+            buttons.style.visibility = 'hidden'
+            if (chosenAnswer == rawAnswer) {
+                winStreak += 1
+                streak.innerHTML = 'Streak: ' + winStreak
+                localStorage.setItem('streak', winStreak)
+                answerText.innerHTML = `correct! &#127881; your streak is now ${winStreak}.`
+            } else {
+                winStreak = 0
+                localStorage.setItem('streak', 0)
+                answerText.innerHTML = `incorrect - was ${rawAnswer.toLowerCase()}. Streak reset.`
+            }
+            big.style.visibility = 'visible'
+        }
+        reload.addEventListener('click', function () {
+            location.reload()
+            event.preventDefault()
+        })
+        amount.innerHTML = `x${multiOne} to ${defendingName}, x${multiTwo} to ${defendingNameTwo}. ${multiOne} * ${multiTwo} = ${multiOne * multiTwo}`
+    </script>
+</body>
+
+</html>
