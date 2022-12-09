@@ -12,12 +12,12 @@
 </head>
 
 <body>
-    <select id="typeNumDrop"onchange="onChangeSomething(this)">
+    <select id="typeNumDrop" onchange="changeNumTypes(this)">
         <option value="2Types">Defender has 2 types</option>
-        <option value="1Type" >Defender has one type</option>
+        <option value="1Type">Defender has one type</option>
     </select>
-    <select id="atkTypeChooser" onchange="onChangeThing(this)">
-        <option value="1" selected="selected">Random Attack Type</option>
+    <select id="atkTypeChooser" onchange="changeAttackType(this)">
+        <option value="Random Attack Type" selected">Random Attack Type</option>
     </select>
     <br><br><br>
     <img id='atkImg' src='./pokeball.png' width="50" height="50">
@@ -229,24 +229,21 @@
                 "noeffect": []
             }
         }
-        let typeNames = Object.keys(types)
+        const typeNames = Object.keys(types)
         for (let i = 0; i < typeNames.length; i++) {
-            let e = document.createElement('option')
+            const e = document.createElement('option')
             e.text = e.value = typeNames[i]
             atkTypeChooser.appendChild(e)
         }
         atkTypeChooser.value = localStorage.getItem('monoType')
-        function onChangeThing(idk){
+        function changeAttackType(idk){
             localStorage.setItem('monoType', atkTypeChooser.value)
             console.log(localStorage.getItem('monoType'))
-            console.log(atkTypeChooser.value)
         }
         typeNumDrop.value = localStorage.getItem('numberOfTypes')
-        console.log(localStorage.getItem('numberOfTypes'))
-        function onChangeSomething(idk){
+        function changeNumTypes(idk){
             localStorage.setItem('numberOfTypes', typeNumDrop.value)
             console.log(localStorage.getItem('numberOfTypes'))
-            console.log(typeNumDrop.value)
         }
         streak.innerHTML = 'Streak: ' + winStreak
         let multiOne = 0
@@ -296,7 +293,7 @@
                 default:
                     multiTwo = 1
             }
-            if (typeNumDrop.value = 'Two Types') {
+            if (typeNumDrop.value === 'Two Types') {
                 switch (multiOne * multiTwo) {
                     case 4:
                         return 'SUPER SUPER EFFECTIVE'
