@@ -75,7 +75,7 @@
         <h3 id='amounts'>amounts</h3>
     </div>
     
-    <br><br><br><div id="streak" id="streak"></div>
+    <div id="streak" id="streak"></div>
     <p id="heading"> Configure the dropdowns as you would like, and then reload the page. Click to close. Please zoom in on mobile. </p>
     <br>
     <script>
@@ -361,49 +361,11 @@
         const twoTypes = (atkType, defTypeOne, defTypeTwo) => {
             multiOne = typeAttacking(atkType, defTypeOne)
             multiTwo = typeAttacking(atkType, defTypeTwo)
-            if (typeNumDrop.value === '2Types') {
-                switch (multiOne * multiTwo) {
-                    case 4:
-                        return 'SUPER SUPER EFFECTIVE'
-                        break
-
-                    case 2:
-                        return 'SUPER EFFECTIVE'
-                        break
-
-                    case 1:
-                        return 'EFFECTIVE'
-                        break
-
-                    case 0.5:
-                        return 'NOT VERY EFFECTIVE'
-                        break
-
-                    case 0.25:
-                        return 'SUPER NOT VERY EFFECTIVE'
-                        break
-
-                    case 0:
-                        return 'NO EFFECT'
-                }
+            if (typeNumDrop.value === '2Types') {   
+                return multiOne *multiTwo
             } else {
                 //just one type
-                switch (multiOne) {
-                    case 2:
-                        return 'SUPER EFFECTIVE'
-                        break
-
-                    case 1:
-                        return 'EFFECTIVE'
-                        break
-
-                    case 0.5:
-                        return 'NOT VERY EFFECTIVE'
-                        break
-
-                    case 0:
-                        return 'NO EFFECT'
-                }
+                return multiOne
             }
         }
         //choose the one/two defending types
@@ -421,32 +383,32 @@
         let chosenAnswer = ''
         //give the buttons purpose
         supersupereff.addEventListener('click', function () {
-            chosenAnswer = 'SUPER SUPER EFFECTIVE'
+            chosenAnswer = 4
             revealAnswer()
             event.preventDefault()
         })
         supereff.addEventListener('click', function () {
-            chosenAnswer = 'SUPER EFFECTIVE'
+            chosenAnswer = 2
             revealAnswer()
             event.preventDefault()
         })
         eff.addEventListener('click', function () {
-            chosenAnswer = 'EFFECTIVE'
+            chosenAnswer = 1
             revealAnswer()
             event.preventDefault()
         })
         noteff.addEventListener('click', function () {
-            chosenAnswer = 'NOT VERY EFFECTIVE'
+            chosenAnswer = 0.5
             revealAnswer()
             event.preventDefault()
         })
         supernoteff.addEventListener('click', function () {
-            chosenAnswer = 'SUPER NOT VERY EFFECTIVE'
+            chosenAnswer = 0.25
             revealAnswer()
             event.preventDefault()
         })
         noeff.addEventListener('click', function () {
-            chosenAnswer = 'NO EFFECT'
+            chosenAnswer = 0
             revealAnswer()
             event.preventDefault()
         })
@@ -459,11 +421,11 @@
                 winStreak += 1
                 streak.innerHTML = 'Streak: ' + winStreak
                 localStorage.setItem('streak', winStreak)
-                answerText.innerHTML = `${chosenAnswer} is correct! &#127881; Your streak is now ${winStreak}.`
+                answerText.innerHTML = `${chosenAnswer}x is correct! &#127881; Your streak is now ${winStreak}.`
             } else {
                 winStreak = 0
                 localStorage.setItem('streak', 0)
-                answerText.innerHTML = `Incorrect - was ${rawAnswer}. You picked ${chosenAnswer}. Streak reset.`
+                answerText.innerHTML = `${chosenAnswer}x was wrong. It was ${rawAnswer}x. Streak reset.`
             }
             big.style.visibility = 'visible'
         }
@@ -474,9 +436,9 @@
         })
         //set answer text
         if (typeNumDrop.value == '1Type') {
-            amount.innerHTML = `x${multiOne} to ${defendingName}.`
+            amount.innerHTML = `${multiOne}x to ${defendingName}.`
         } else {
-            amount.innerHTML = `x${multiOne} to ${defendingName}, x${multiTwo} to ${defendingNameTwo}. ${multiOne} * ${multiTwo} = ${multiOne * multiTwo}.`
+            amount.innerHTML = `${multiOne}x to ${defendingName}, ${multiTwo}x to ${defendingNameTwo}. ${multiOne} * ${multiTwo} = ${multiOne * multiTwo}.`
         }
         //the end
     </script>
