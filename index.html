@@ -269,9 +269,11 @@
         const lighting = (lightingSelect) => {
             if (lightingSelect.value == 'darkMode') {
                 darkMode()
+                lightingSelector.value = 'darkMode'
                 localStorage.setItem('lighting', 'darkMode')
             } else {
                 lightMode()
+                lightingSelector.value = 'lightMode'
                 localStorage.setItem('lighting', 'lightMode')
             }
         }
