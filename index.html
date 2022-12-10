@@ -308,6 +308,16 @@
                 timeLeft = Number(timerDrop.value)
                 timerFunction()
                 let timerInterval = setInterval(() => {
+                    if (timeLeft < 0) {
+                        clearInterval(timerInterval)
+                        chosenAnswer = -1
+                        revealAnswer()
+                        timerDisplay.remove()
+                    }
+                    if (chosenAnswer !== '') {
+                        clearInterval(timerInterval)
+                        timerDisplay.remove()
+                    }
                     timerFunction()
                     if (timeLeft < 0) {
                         clearInterval(timerInterval)
