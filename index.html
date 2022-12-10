@@ -300,14 +300,22 @@
             atkTypeChooser.appendChild(e)
         }
         //if there was previously a chosen value, set it
-        atkTypeChooser.value = localStorage.getItem('monoType')
+        if(localStorage.getItem('monotype')){
+            atkTypeChooser.value = localStorage.getItem('monoType')
+        } else {
+            atkTypeChooser.value = 'Random Attack Type'
+        }
         //on change, remember chosen type
         const changeAttackType = (typeSelect) => {
             localStorage.setItem('monoType', typeSelect.value)
             location.reload()
         }
         //same thing for # of types
-        typeNumDrop.value = localStorage.getItem('numberOfTypes')
+        if(localStorage.getItem('numberOfTypes')){
+            typeNumDrop.value = localStorage.getItem('numberOfTypes')
+        } else {
+            typeNumDrop.value = '2Types'
+        }
         //hide 2nd image if only one type
         if (typeNumDrop.value == '1Type') {
             defTypeImageTwo.style.visibility = 'hidden'
@@ -322,14 +330,14 @@
         let multiTwo = 0
         let attackingName = ''
         //if there is a chosen type, use it
-        if (atkTypeChooser.value == 'Random Attack Type') {
-            attackingName = typeNames[Math.floor(Math.random() * 18)]
-        } else {
+        if (atkTypeChooser.value != 'Random Attack Type' && atkTypeChooser.value != '') {
             attackingName = atkTypeChooser.value
+        } else {
+            attackingName = typeNames[Math.floor(Math.random() * 18)]
         }
         //find effectiveness of one type to another
         const typeAttacking = (atkTypeName, defTypeName) => {
-            const atkType = types[atkTypeName]
+            let atkType = types[atkTypeName]
             if (atkType.very.some(typeName => typeName === defTypeName)) {
                 return 2
             } else if (atkType.notvery.some(typeName => typeName === defTypeName)) {
