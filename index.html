@@ -40,14 +40,14 @@
 
 <body>
     <select id="typeNumDrop" onchange="changeNumTypes(this)" class="element">
-        <option value="2Types">Defender has 2 types</option>
+        <option value="2Types" selected="selected">Defender has 2 types</option>
         <option value="1Type">Defender has one type</option>
     </select>
     <select id="atkTypeChooser" onchange="changeAttackType(this)" class="element">
-        <option value="Random Attack Type" selected">Random Attack Type</option>
+        <option value="Random Attack Type" selected="selected">Random Attack Type</option>
     </select>
     <select id="lightingSelector" onchange="lighting(this)" class="element">
-        <option value="lightMode">set light mode</option>
+        <option value="lightMode"selected="selected">set light mode</option>
         <option value="darkMode">set dark mode</option>
     </select>
     
@@ -458,6 +458,7 @@
         } else {
             amount.innerHTML = `x${multiOne} to ${defendingName}, x${multiTwo} to ${defendingNameTwo}. ${multiOne} * ${multiTwo} = ${multiOne * multiTwo}.`
         }
+        location.reload()
         //the end
     </script>
 </body>
