@@ -7,7 +7,7 @@
 
         #heading {
             background-color: rgb(219, 92, 92);
-            width: 320px;
+            width: 330px;
             border: 0.3rem solid rgb(219, 92, 92);
             color: white;
             font-size: 80%;
@@ -35,6 +35,9 @@
         #darkMode {
             accent-color: rgb(99, 99, 99);
         }
+        #new, #buttons {
+            display:inline-block;
+        }
     </style>
 </head>
 
@@ -47,12 +50,12 @@
         <option value="Random Attack Type" selected="selected">Random Attack Type</option>
     </select>
     <select id="lightingSelector" onchange="lighting(this)" class="element">
-        <option value="lightMode"selected="selected">set light mode</option>
-        <option value="darkMode">set dark mode</option>
+        <option value="lightMode"selected="selected">Set light mode</option>
+        <option value="darkMode">Set dark mode</option>
     </select>
     
     <br>
-    <p id="heading"> reload page after updating settings. click to close.<br> on mobile, you may have to zoom in. </p><br>
+    <br>
     <img id='atkImg' src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/512px-Pok%C3%A9_Ball_icon.svg.png?20161023215848' width="50" height="50">
     <h1 class="allText">VS</h1>
     <img id='defImg1' src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/512px-Pok%C3%A9_Ball_icon.svg.png?20161023215848' width="50" height="50">
@@ -64,14 +67,16 @@
         <button id="1x" class="element">1x</button>
         <button id="0.5x" class="element">0.5x</button>
         <button id="0.25x" class="element">0.25x</button>
-        <button id="0x" class="element">0x</button>
-    </div>
+        <button id="0x" class="element">0x</button>   
+    </div><br><br>
+    <button id='new' class="element">GIVE ME A NEW ONE!</button>
     <div id='big' style="visibility: hidden" class="allText">
         <h2 id="answerText">answer</h2>
         <h3 id='amounts'>amounts</h3>
     </div>
-    <button id='new' class="element">GIVE ME A NEW ONE!</button>
+    
     <br><br><br><div id="streak" id="streak"></div>
+    <p id="heading"> Configure the dropdowns as you would like, and then reload the page. Click to close. Please zoom in on mobile. </p>
     <br>
     <script>
         //initializing everything
@@ -98,7 +103,7 @@
         const supernoteff = document.getElementById('0.25x')
         const noeff = document.getElementById('0x')
         const lightingSelector = document.getElementById('lightingSelector')
-        const typeIcons = {
+        /*const typeIcons = {
             'normal': 'https://archives.bulbagarden.net/media/upload/thumb/c/cb/Normal_icon_LA.png/64px-Normal_icon_LA.png',
             'fighting': 'https://archives.bulbagarden.net/media/upload/thumb/6/68/Fighting_icon_LA.png/64px-Fighting_icon_LA.png',
             'flying': 'https://archives.bulbagarden.net/media/upload/thumb/d/de/Flying_icon_LA.png/64px-Flying_icon_LA.png',
@@ -117,7 +122,7 @@
             'dragon': 'https://archives.bulbagarden.net/media/upload/thumb/2/28/Dragon_icon_LA.png/64px-Dragon_icon_LA.png',
             'dark': 'https://archives.bulbagarden.net/media/upload/thumb/7/7f/Dark_icon_LA.png/64px-Dark_icon_LA.png',
             'fairy': 'https://archives.bulbagarden.net/media/upload/thumb/b/b1/Fairy_icon_LA.png/64px-Fairy_icon_LA.png'
-        }
+        }*/
         const types = {
             'normal': {
                 "immune": ["ghost"],
@@ -297,12 +302,14 @@
         })
         //creating the type chooser dropdown
         for (let i = 0; i < typeNames.length; i++) {
+            let typeAlpha = typeNames.sort()
             const e = document.createElement('option')
-            e.text = e.value = typeNames[i]
+            e.text = e.value = typeAlpha[i]
             atkTypeChooser.appendChild(e)
         }
         //if there was previously a chosen value, set it
-        if(localStorage.getItem('monotype')){
+        console.log(localStorage.getItem('mono'))
+        if(localStorage.getItem('monoType')){
             atkTypeChooser.value = localStorage.getItem('monoType')
         } else {
             atkTypeChooser.value = 'Random Attack Type'
@@ -405,9 +412,12 @@
         //get the answer
         let rawAnswer = twoTypes(attackingName, defendingName, defendingNameTwo)
         //create images
-        atkTypeImage.src = typeIcons[attackingName]
-        defTypeImageOne.src = typeIcons[defendingName]
-        defTypeImageTwo.src = typeIcons[defendingNameTwo]
+        atkTypeImage.src = attackingName+'.png'
+        atkTypeImage.title = attackingName
+        defTypeImageOne.src = defendingName+'.png'
+        defTypeImageOne.title = defendingName
+        defTypeImageTwo.src = defendingNameTwo+'.png'
+        defTypeImageTwo.title = defendingNameTwo
         let chosenAnswer = ''
         //give the buttons purpose
         supersupereff.addEventListener('click', function () {
@@ -449,11 +459,11 @@
                 winStreak += 1
                 streak.innerHTML = 'Streak: ' + winStreak
                 localStorage.setItem('streak', winStreak)
-                answerText.innerHTML = `correct! &#127881; your streak is now ${winStreak}.`
+                answerText.innerHTML = `${chosenAnswer} is correct! &#127881; Your streak is now ${winStreak}.`
             } else {
                 winStreak = 0
                 localStorage.setItem('streak', 0)
-                answerText.innerHTML = `incorrect - was ${rawAnswer.toLowerCase()}. streak reset.`
+                answerText.innerHTML = `Incorrect - was ${rawAnswer}. You picked ${chosenAnswer}. Streak reset.`
             }
             big.style.visibility = 'visible'
         }
