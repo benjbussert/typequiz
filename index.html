@@ -3,7 +3,7 @@
 
 <head>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+       @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
         #heading {
             background-color: rgb(219, 92, 92);
@@ -15,7 +15,7 @@
         }
 
         * {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Open Sans', sans-serif;
         }
 
         *:focus {
@@ -76,7 +76,7 @@
     </div>
     
     <div id="streak" id="streak"></div>
-    <p id="heading"> Configure the dropdowns as you would like, and then reload the page. Click to close. Please zoom in on mobile. </p>
+    <p id="heading"> Configure the dropdowns as you would like, and then reload the page. Click this box to hide. Please zoom in on mobile. </p>
     <br>
     <script>
         //initializing everything
@@ -308,7 +308,6 @@
             atkTypeChooser.appendChild(e)
         }
         //if there was previously a chosen value, set it
-        console.log(localStorage.getItem('mono'))
         if(localStorage.getItem('monoType')){
             atkTypeChooser.value = localStorage.getItem('monoType')
         } else {
