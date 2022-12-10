@@ -300,16 +300,6 @@
             timerDisplay.innerHTML = `${timeLeft}s left`
             timeLeft--
             console.log(timeLeft)
-            if (timeLeft < 0) {
-                clearInterval(timer)
-                chosenAnswer = -1
-                revealAnswer()
-                timerDisplay.style.visibility = 'hidden'
-            }
-            if (chosenAnswer != '') {
-                clearInterval(timer)
-                timerDisplay.style.visibility = 'hidden'
-            }
         }
         let timeLeft = 0
         const timer = () => {
@@ -317,8 +307,18 @@
                 timerDisplay.style.visibility = 'visible'
                 timeLeft = Number(timerDrop.value)
                 timerFunction()
-                let timer = setInterval(() => {
+                let timerInterval = setInterval(() => {
                     timerFunction()
+                    if (timeLeft < 0) {
+                        clearInterval(timerInterval)
+                        chosenAnswer = -1
+                        revealAnswer()
+                        timerDisplay.remove()
+                    }
+                    if (chosenAnswer !== '') {
+                        clearInterval(timerInterval)
+                        timerDisplay.remove()
+                    }
                 }, 1000);
             } else {
                 timerDisplay.style.visibility = 'hidden'
@@ -493,7 +493,7 @@
                 streak.innerHTML = 'Streak: ' + winStreak
                 localStorage.setItem('streak', winStreak)
                 answerText.innerHTML = `${chosenAnswer}x is correct! &#127881; Your streak is now ${winStreak}.`
-            } else if (chosenAnswer == -1){
+            } else if (chosenAnswer == -1) {
                 winStreak = 0
                 localStorage.setItem('streak', 0)
                 answerText.innerHTML = `You ran out of time! 😔 It was ${rawAnswer}x. Streak reset.`
