@@ -5,49 +5,83 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
+        #heading {
+            background-color: rgb(219, 92, 92);
+            width: 320px;
+            border: 0.3rem solid rgb(219, 92, 92);
+            color: white;
+            font-size: 80%;
+            text-align: center;
+        }
+
         * {
             font-family: 'Roboto', sans-serif;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        .element {
+            background-color: rgb(240, 240, 240);
+            color: rgb(7, 7, 7);
+            border-color: rgb(240, 240, 240);
+            border-radius: 3px;
+            border-width: 0.05ex;
+            border-color: rgb(83, 83, 83);
+            border-style: solid;
+        }
+
+        #darkMode {
+            accent-color: rgb(99, 99, 99);
         }
     </style>
 </head>
 
 <body>
-    <select id="typeNumDrop" onchange="changeNumTypes(this)">
+    <select id="typeNumDrop" onchange="changeNumTypes(this)" class="element">
         <option value="2Types">Defender has 2 types</option>
         <option value="1Type">Defender has one type</option>
     </select>
-    <select id="atkTypeChooser" onchange="changeAttackType(this)">
+    <select id="atkTypeChooser" onchange="changeAttackType(this)" class="element">
         <option value="Random Attack Type" selected">Random Attack Type</option>
     </select>
-    <br><br><br>
-    <img id='atkImg' src='./pokeball.png' width="50" height="50">
-    <h1>VS</h1>
-    <img id='defImg1' src='./pokeball.png' width="50" height="50">
-    <img id='defImg2' src='./pokeball.png' width="50" height="50">
+    <select id="lightingSelector" onchange="lighting(this)" class="element">
+        <option value="lightMode">set light mode</option>
+        <option value="darkMode">set dark mode</option>
+    </select>
+    
+    <br>
+    <p id="heading">! reload page after updating settings. click to close.<br> if you're on mobile, please zoom in for convenience. </p><br>
+    <img id='atkImg' src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/512px-Pok%C3%A9_Ball_icon.svg.png?20161023215848' width="50" height="50">
+    <h1 class="allText">VS</h1>
+    <img id='defImg1' src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/512px-Pok%C3%A9_Ball_icon.svg.png?20161023215848' width="50" height="50">
+    <img id='defImg2' visiblity='hidden' src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Pok%C3%A9_Ball_icon.svg/512px-Pok%C3%A9_Ball_icon.svg.png?20161023215848' width="50" height="50">
     <br><br><br>
     <div id="buttons" style="visibility:visible">
-        <button id="4x">4x</button>
-        <button id="2x">2x</button>
-        <button id="1x">1x</button>
-        <button id="0.5x">0.5x</button>
-        <button id="0.25x">0.25x</button>
-        <button id="0x">0x</button>
+        <button id="4x" class="element">4x</button>
+        <button id="2x" class="element">2x</button>
+        <button id="1x" class="element">1x</button>
+        <button id="0.5x" class="element">0.5x</button>
+        <button id="0.25x" class="element">0.25x</button>
+        <button id="0x" class="element">0x</button>
     </div>
-    <div id='big' style="visibility: hidden">
-        <h1 id="answerText">answer</h1>
+    <div id='big' style="visibility: hidden" class="allText">
+        <h2 id="answerText">answer</h2>
         <h3 id='amounts'>amounts</h3>
     </div>
-    <button id='new'>GIVE ME A NEW ONE!</button>
-    <br><br><br>
-    <div id="streak"></div>
-    <section></section>
+    <button id='new' class="element">GIVE ME A NEW ONE!</button>
+    <br><br><br><div id="streak" id="streak"></div>
+    <br>
     <script>
+        //initializing everything
         let winStreak = 0
         winStreak = Number(localStorage.getItem('streak'))
         let atkTypeImage = document.getElementById('atkImg')
         let defTypeImageOne = document.getElementById('defImg1')
         let defTypeImageTwo = document.getElementById('defImg2')
         let amount = document.getElementById('amounts')
+        const heading = document.getElementById('heading')
         const typeNumDrop = document.getElementById('typeNumDrop')
         const atkTypeChooser = document.getElementById('atkTypeChooser')
         const answerText = document.getElementById('answerText')
@@ -63,6 +97,7 @@
         const noteff = document.getElementById('0.5x')
         const supernoteff = document.getElementById('0.25x')
         const noeff = document.getElementById('0x')
+        const lightingSelector = document.getElementById('lightingSelector')
         const typeIcons = {
             'normal': 'https://archives.bulbagarden.net/media/upload/thumb/c/cb/Normal_icon_LA.png/64px-Normal_icon_LA.png',
             'fighting': 'https://archives.bulbagarden.net/media/upload/thumb/6/68/Fighting_icon_LA.png/64px-Fighting_icon_LA.png',
@@ -230,70 +265,86 @@
             }
         }
         const typeNames = Object.keys(types)
+        //all the dark mode stuff
+        const lighting = (lightingSelect) => {
+            if (lightingSelect.value == 'darkMode') {
+                darkMode()
+                localStorage.setItem('lighting', 'darkMode')
+            } else {
+                lightMode()
+                localStorage.setItem('lighting', 'lightMode')
+            }
+        }
+        const darkMode = () => {
+            document.body.style.backgroundColor = 'rgb(33, 33, 33)'
+            document.body.style.color = 'white'
+        }
+        const lightMode = () => {
+            document.body.style.backgroundColor = 'white'
+            document.body.style.color = 'black'
+        }
+        lightingSelector.value = localStorage.getItem('lighting')
+        lighting(lightingSelector)
+        //setup for the little warning header
+        if (localStorage.getItem('headerGone?') == 'true') {
+            heading.remove()
+        }
+        heading.addEventListener('click', function () {
+            heading.remove()
+            localStorage.setItem('headerGone?', 'true')
+        })
+        //creating the type chooser dropdown
         for (let i = 0; i < typeNames.length; i++) {
             const e = document.createElement('option')
             e.text = e.value = typeNames[i]
             atkTypeChooser.appendChild(e)
         }
+        //if there was previously a chosen value, set it
         atkTypeChooser.value = localStorage.getItem('monoType')
-        function changeAttackType(idk){
-            localStorage.setItem('monoType', atkTypeChooser.value)
-            console.log(localStorage.getItem('monoType'))
+        //on change, remember chosen type
+        const changeAttackType = (typeSelect) => {
+            localStorage.setItem('monoType', typeSelect.value)
+            location.reload()
         }
+        //same thing for # of types
         typeNumDrop.value = localStorage.getItem('numberOfTypes')
-        function changeNumTypes(idk){
-            localStorage.setItem('numberOfTypes', typeNumDrop.value)
-            console.log(localStorage.getItem('numberOfTypes'))
+        //hide 2nd image if only one type
+        if (typeNumDrop.value == '1Type') {
+            defTypeImageTwo.style.visibility = 'hidden'
         }
+        const changeNumTypes = (quanitySelect) => {
+            localStorage.setItem('numberOfTypes', quanitySelect.value)
+            location.reload()
+        }
+        // set your streak
         streak.innerHTML = 'Streak: ' + winStreak
         let multiOne = 0
         let multiTwo = 0
         let attackingName = ''
+        //if there is a chosen type, use it
         if (atkTypeChooser.value == 'Random Attack Type') {
             attackingName = typeNames[Math.floor(Math.random() * 18)]
         } else {
             attackingName = atkTypeChooser.value
         }
+        //find effectiveness of one type to another
         const typeAttacking = (atkTypeName, defTypeName) => {
             const atkType = types[atkTypeName]
             if (atkType.very.some(typeName => typeName === defTypeName)) {
-                return "SUPER EFFECTIVE"
+                return 2
             } else if (atkType.notvery.some(typeName => typeName === defTypeName)) {
-                return "NOT VERY EFFECTIVE"
+                return 0.5
             } else if (atkType.noeffect.some(typeName => typeName === defTypeName)) {
-                return "NO EFFECT"
+                return 0
             } else {
-                return "EFFECTIVE"
+                return 1
             }
         }
+        //run above function twice and multiply together
         const twoTypes = (atkType, defTypeOne, defTypeTwo) => {
-            switch (typeAttacking(atkType, defTypeOne)) {
-                case 'SUPER EFFECTIVE':
-                    multiOne = 2
-                    break
-                case 'NOT VERY EFFECTIVE':
-                    multiOne = 0.5
-                    break
-                case 'NO EFFECT':
-                    multiOne = 0
-                    break
-                default:
-                    multiOne = 1
-            }
-            switch (typeAttacking(atkType, defTypeTwo)) {
-                case 'SUPER EFFECTIVE':
-                    multiTwo = 2
-                    break
-                case 'NOT VERY EFFECTIVE':
-                    multiTwo = 0.5
-                    break
-                case 'NO EFFECT':
-                    multiTwo = 0
-                    break
-                default:
-                    multiTwo = 1
-            }
-            if (typeNumDrop.value === 'Two Types') {
+            multiOne = typeAttacking(atkType, defTypeOne)
+            multiTwo = typeAttacking(atkType, defTypeTwo)
+            if (typeNumDrop.value === '2Types') {
                 switch (multiOne * multiTwo) {
                     case 4:
                         return 'SUPER SUPER EFFECTIVE'
@@ -319,13 +370,14 @@
                         return 'NO EFFECT'
                 }
             } else {
+                //just one type
                 switch (multiOne) {
                     case 2:
                         return 'SUPER EFFECTIVE'
                         break
 
                     case 1:
-                        return 'SUPER EFFECTIVE'
+                        return 'EFFECTIVE'
                         break
 
                     case 0.5:
@@ -337,14 +389,17 @@
                 }
             }
         }
-
+        //choose the one/two defending types
         let defendingName = typeNames[Math.floor(Math.random() * 18)]
         let defendingNameTwo = typeNames.filter(type => type !== defendingName)[Math.floor(Math.random() * 17)]
+        //get the answer
         let rawAnswer = twoTypes(attackingName, defendingName, defendingNameTwo)
+        //create images
         atkTypeImage.src = typeIcons[attackingName]
         defTypeImageOne.src = typeIcons[defendingName]
         defTypeImageTwo.src = typeIcons[defendingNameTwo]
         let chosenAnswer = ''
+        //give the buttons purpose
         supersupereff.addEventListener('click', function () {
             chosenAnswer = 'SUPER SUPER EFFECTIVE'
             revealAnswer()
@@ -375,7 +430,9 @@
             revealAnswer()
             event.preventDefault()
         })
+        //hide answer text
         big.style.visibility = 'hidden'
+        //reveals the answer and sets streak
         function revealAnswer() {
             buttons.style.visibility = 'hidden'
             if (chosenAnswer == rawAnswer) {
@@ -386,15 +443,22 @@
             } else {
                 winStreak = 0
                 localStorage.setItem('streak', 0)
-                answerText.innerHTML = `incorrect - was ${rawAnswer.toLowerCase()}. Streak reset.`
+                answerText.innerHTML = `incorrect - was ${rawAnswer.toLowerCase()}. streak reset.`
             }
             big.style.visibility = 'visible'
         }
+        //bottom button that just reloads page
         reload.addEventListener('click', function () {
             location.reload()
             event.preventDefault()
         })
-        amount.innerHTML = `x${multiOne} to ${defendingName}, x${multiTwo} to ${defendingNameTwo}. ${multiOne} * ${multiTwo} = ${multiOne * multiTwo}`
+        //set answer text
+        if (typeNumDrop.value == '1Type') {
+            amount.innerHTML = `x${multiOne} to ${defendingName}.`
+        } else {
+            amount.innerHTML = `x${multiOne} to ${defendingName}, x${multiTwo} to ${defendingNameTwo}. ${multiOne} * ${multiTwo} = ${multiOne * multiTwo}.`
+        }
+        //the end
     </script>
 </body>
 
