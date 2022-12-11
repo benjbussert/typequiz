@@ -309,7 +309,7 @@
                 let timerInterval = setInterval(() => {
                     timerDisplay.innerHTML = `${timeLeft}s left`
                     timeLeft--
-                    if(timeLeft < 1){
+                    if(timeLeft < 0){
                         clearInterval(timerInterval)
                         chosenAnswer = -1
                         revealAnswer()
