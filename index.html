@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- made by benjamin bussert, with help from dillon bussert. enjoy!-->
 <html>
 
 <head>
@@ -298,36 +299,20 @@
         timerDisplay.style.visibility = 'hidden'
         const timerFunction = () => {
             timerDisplay.style.visibility = 'visible'
-            timerDisplay.innerHTML = `${timeLeft}s left`
-            timeLeft--
+            
         }
         let timeLeft = 0
         const timer = () => {
             if (timerDrop.value !== 'No timer') {
-                timerDisplay.style.visibility = 'visible'
                 timeLeft = Number(timerDrop.value)
                 timerFunction()
                 let timerInterval = setInterval(() => {
-                    if (chosenAnswer !== '') {
+                    timerDisplay.innerHTML = `${timeLeft}s left`
+                    timeLeft--
+                    if(timeLeft < 1){
                         clearInterval(timerInterval)
-                        timerDisplay.remove()
-                    }
-                    if (timeLeft < 0) {
-                        clearInterval(timerInterval)
-                        timerDone = -1
+                        chosenAnswer = -1
                         revealAnswer()
-                        timerDisplay.remove()
-                    }
-                    timerFunction()
-                    if (chosenAnswer !== '') {
-                        clearInterval(timerInterval)
-                        timerDisplay.remove()
-                    }
-                    if (timeLeft < 0) {
-                        clearInterval(timerInterval)
-                        timerDone = -1
-                        revealAnswer()
-                        timerDisplay.remove()
                     }
                 }, 1000);
             } else {
@@ -457,41 +442,30 @@
         defTypeImageTwo.src = 'images/' + defendingNameTwo + '.png'
         defTypeImageTwo.title = defendingNameTwo
         //give the buttons purpose
-        supersupereff.addEventListener('click', function () {
-            chosenAnswer = 4
+        const buttonPressed = (numb) => {
+            chosenAnswer = numb
             revealAnswer()
             timerDisplay.remove()
+            clearInterval(timerInterval)
             event.preventDefault()
+        }
+        supersupereff.addEventListener('click', function () {
+            buttonPressed(4)
         })
         supereff.addEventListener('click', function () {
-            chosenAnswer = 2
-            revealAnswer()
-            timerDisplay.remove()
-            event.preventDefault()
+            buttonPressed(2)
         })
         eff.addEventListener('click', function () {
-            chosenAnswer = 1
-            revealAnswer()
-            timerDisplay.remove()
-            event.preventDefault()
+            buttonPressed(1)
         })
         noteff.addEventListener('click', function () {
-            chosenAnswer = 0.5
-            revealAnswer()
-            timerDisplay.remove()
-            event.preventDefault()
+            buttonPressed(0.5)
         })
         supernoteff.addEventListener('click', function () {
-            chosenAnswer = 0.25
-            revealAnswer()
-            timerDisplay.remove()
-            event.preventDefault()
+            buttonPressed(0.25)
         })
         noeff.addEventListener('click', function () {
-            chosenAnswer = 0
-            revealAnswer()
-            timerDisplay.remove()
-            event.preventDefault()
+            buttonPressed(0)
         })
         //hide answer text
         big.style.visibility = 'hidden'
@@ -505,7 +479,7 @@
                 streak.innerHTML = 'Streak: ' + winStreak
                 localStorage.setItem('streak', winStreak)
                 answerText.innerHTML = `${chosenAnswer}x is correct! &#127881; Your streak is now ${winStreak}.`
-            } else if (timerDone == -1 && block == 0) {
+            } else if (chosenAnswer == -1) {
                 winStreak = 0
                 localStorage.setItem('streak', 0)
                 answerText.innerHTML = `You ran out of time! 😔 It was ${rawAnswer}x. Streak reset.`
