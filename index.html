@@ -301,6 +301,7 @@
         let stopTime = 0
         const timer = () => {
             if (timerDrop.value !== 'No timer') {
+                timerDisplay.style.visibility = 'visible'
                 timeLeft = Number(timerDrop.value)
                 timerDisplay.innerHTML = `${timeLeft}s left`
                 timeLeft--
