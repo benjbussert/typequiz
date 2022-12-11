@@ -477,7 +477,7 @@
         function revealAnswer() {
             buttons.style.visibility = 'hidden'
             if (chosenAnswer == rawAnswer) {
-                winStreak += 1
+                if(stopTime !== -1){winStreak += 1}
                 streak.innerHTML = 'Streak: ' + winStreak
                 localStorage.setItem('streak', winStreak)
                 answerText.innerHTML = `${chosenAnswer}x is correct! &#127881; Your streak is now ${winStreak}.`
