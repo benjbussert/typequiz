@@ -297,20 +297,17 @@
         //a timer
         let timerDone = 0
         timerDisplay.style.visibility = 'hidden'
-        const timerFunction = () => {
-            timerDisplay.style.visibility = 'visible'
-            
-        }
         let timeLeft = 0
         let stopTime = 0
         const timer = () => {
             if (timerDrop.value !== 'No timer') {
                 timeLeft = Number(timerDrop.value)
-                timerFunction()
+                timerDisplay.innerHTML = `${timeLeft}s left`
+                timeLeft--
                 let timerInterval = setInterval(() => {
                     timerDisplay.innerHTML = `${timeLeft}s left`
                     timeLeft--
-                    if(timeLeft < 0){
+                    if (timeLeft < 0) {
                         console.log('clear')
                         clearInterval(timerInterval)
                         stopTime = -1
@@ -472,12 +469,12 @@
         //hide answer text
         big.style.visibility = 'hidden'
         let block = 0
-        
+
         //reveals the answer and sets streak
         function revealAnswer() {
             buttons.style.visibility = 'hidden'
             if (chosenAnswer == rawAnswer) {
-                if(stopTime !== -1){winStreak += 1}
+                if (stopTime !== -1) { winStreak += 1 }
                 streak.innerHTML = 'Streak: ' + winStreak
                 localStorage.setItem('streak', winStreak)
                 timerDisplay.style.visibility = 'hidden'
