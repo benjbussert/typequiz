@@ -480,15 +480,18 @@
                 if(stopTime !== -1){winStreak += 1}
                 streak.innerHTML = 'Streak: ' + winStreak
                 localStorage.setItem('streak', winStreak)
+                timerDisplay.style.visibility = 'hidden'
                 answerText.innerHTML = `${chosenAnswer}x is correct! &#127881; Your streak is now ${winStreak}.`
             } else if (stopTime == -1 && block == 0) {
                 winStreak = 0
                 localStorage.setItem('streak', 0)
+                timerDisplay.style.visibility = 'hidden'
                 answerText.innerHTML = `You ran out of time! 😔 It was ${rawAnswer}x. Streak reset.`
             } else {
                 winStreak = 0
                 localStorage.setItem('streak', 0)
                 block = 1
+                timerDisplay.style.visibility = 'hidden'
                 answerText.innerHTML = `${chosenAnswer}x was wrong. 😔 It was ${rawAnswer}x. Streak reset.`
             }
             big.style.visibility = 'visible'
