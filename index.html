@@ -288,10 +288,10 @@
                 display.innerHTML = `${timeLeft}s left`
                 timerInterval = setInterval(() => {
                     timeLeft--
-                    console.log(timeLeft)
                     display.innerHTML = `${timeLeft}s left`
                     if (timeLeft < 1) {
                         clearInterval(timerInterval)
+                        chosenAnswer = 1000
                         revealAnswer()
                     }
                 }, 1000)
